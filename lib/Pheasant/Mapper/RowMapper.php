@@ -106,13 +106,14 @@ class RowMapper extends AbstractMapper implements Finder
     /* (non-phpdoc)
      * @see Mapper::query()
      */
-    public function query(Criteria $criteria=null)
+    public function query(Criteria $criteria=null, $forUpdate=false)
     {
         $query = new Query();
         $query->from($this->_tableName);
 
         // add optional where clause
         if($criteria) $query->where($criteria->toSql());
+        if($forUpdate) $query->forUpdate();
 
         return $query;
     }
@@ -120,8 +121,8 @@ class RowMapper extends AbstractMapper implements Finder
     /* (non-phpdoc)
      * @see Finder::find()
      */
-    public function find($class, Criteria $criteria=null)
+    public function find($class, Criteria $criteria=null, $forUpdate=false)
     {
-        return new Collection($class, $this->query($criteria));
+        return new Collection($class, $this->query($criteria, $forUpdate));
     }
 }

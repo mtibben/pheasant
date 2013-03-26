@@ -17,6 +17,7 @@ class Query implements \IteratorAggregate, \Countable
     private $_where;
     private $_group;
     private $_order;
+    private $_forUpdate = null;
 
     // resultset
     private $_connection;
@@ -155,6 +156,18 @@ class Query implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Adds a "for update" clause
+     * @chainable
+     */
+    public function forUpdate()
+    {
+        $this->_forUpdate = "FOR UPDATE";
+
+        return $this;
+    }
+
+
+    /**
      * Returns the sql for the query
      */
     public function toSql()
@@ -166,7 +179,8 @@ class Query implements \IteratorAggregate, \Countable
             $this->_clause('WHERE', $this->_where),
             $this->_clause('GROUP BY', $this->_group),
             $this->_clause('ORDER BY', $this->_order),
-            $this->_limit
+            $this->_limit,
+            $this->_forUpdate,
             )));
     }
 
